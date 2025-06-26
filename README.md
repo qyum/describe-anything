@@ -2,6 +2,8 @@
 
 **NVIDIA, UC Berkeley, UCSF**
 
+International Conference on Computer Vision (ICCV) 2025
+
 [Long Lian](https://tonylian.com), [Yifan Ding](https://research.nvidia.com/person/yifan-ding), [Yunhao Ge](https://gyhandy.github.io/), [Sifei Liu](https://sifeiliu.net/), [Hanzi Mao](https://hanzimao.me/), [Boyi Li](https://sites.google.com/site/boyilics/home), [Marco Pavone](https://research.nvidia.com/person/marco-pavone), [Ming-Yu Liu](https://mingyuliu.net/), [Trevor Darrell](https://people.eecs.berkeley.edu/~trevor/), [Adam Yala](https://www.adamyala.org/), [Yin Cui](https://ycui.me/)
 
 [[Paper](https://arxiv.org/abs/2504.16072)] | [[Project Page](https://describe-anything.github.io/)] | [[Video](https://describe-anything.github.io/#video)] | [[HuggingFace Demo](https://huggingface.co/spaces/nvidia/describe-anything-model-demo)] | [[Model/Benchmark/Datasets](https://huggingface.co/collections/nvidia/describe-anything-680825bb8f5e41ff0785834c)] | [[Citation](#citation)]
