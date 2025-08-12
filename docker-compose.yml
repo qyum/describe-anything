@@ -1,0 +1,12 @@
+version: '3'
+
+services:
+  ai_service:
+    build: .
+    ports:
+      - 8000:8000
+    command: sh -c "uvicorn main1:app --reload --port=8000 --host=0.0.0.0"  #0.0.0.0
+    volumes:
+      #- ./uploads:/app/uploads
+      - .:/app
+    restart : always
