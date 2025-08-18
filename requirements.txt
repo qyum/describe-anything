@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 #pip install torch==2.0.1 torchvision==0.15.2 torchaudio==2.0.2
+=======
+>>>>>>> fb2e82fa339a24bd4dc33f155d8f750fd231b6f1
 uvicorn
 fastapi
 pydantic
