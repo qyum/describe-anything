@@ -64,7 +64,7 @@ def get_request():
 
 # Config params
 image_path = "D:/describeanything/tshirt.jpg"  # <-- change this to your image path
-model_path = "D:/eshop1/describeanything/checkpoints"  # Local model directory
+model_path = "checkpoints"  # Local model directory
 prompt_mode = "full+focal_crop"
 conv_mode = "v1"
 temperature = 0.2
