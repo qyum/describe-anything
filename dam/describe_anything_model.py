@@ -25,6 +25,11 @@ from .model import get_model_name_from_path, load_pretrained_model
 from transformers import TextIteratorStreamer
 from threading import Thread
 
+import torch
+
+
+
+
 class DescribeAnythingModel(nn.Module):
     def __init__(self, model_path, conv_mode, prompt_mode, **kwargs):
         super().__init__()
@@ -32,6 +37,7 @@ class DescribeAnythingModel(nn.Module):
         self.model_path = model_path
         self.conv_mode = conv_mode
         self.prompt_mode = prompt_mode
+        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
         if isinstance(model_path, str):
             self.tokenizer, self.model, _, _ = load_pretrained_model(model_path, None, None, **kwargs)
@@ -141,25 +147,25 @@ class DescribeAnythingModel(nn.Module):
         # the pil has True/False (if the value is non-zero, then we treat it as True)
         mask_np = (np.asarray(mask_pil) > 0).astype(np.uint8)
         images_tensor, image_info = process_image(image_pil, self.model.config, None, pil_preprocess_fn=lambda pil_img: self.crop_image(image_pil, mask_np=mask_np, crop_mode=crop_mode))
-        images_tensor = images_tensor[None].to(self.model.device, dtype=torch.float16)
+        images_tensor = images_tensor[None].to(self.model.device, dtype=torch.float32)
 
         mask_np = image_info["mask_np"]
         mask_pil = Image.fromarray(mask_np * 255)
         
         masks_tensor = process_image(mask_pil, self.model.config, None)
-        masks_tensor = masks_tensor[None].to(self.model.device, dtype=torch.float16)
+        masks_tensor = masks_tensor[None].to(self.model.device, dtype=torch.float32)
         
         images_tensor = torch.cat((images_tensor, masks_tensor[:, :1, ...]), dim=1)
 
         if crop_mode2 is not None:
             images_tensor2, image_info2 = process_image(image_pil, self.model.config, None, pil_preprocess_fn=lambda pil_img: self.crop_image(pil_img, mask_np=mask_np, crop_mode=crop_mode2))
-            images_tensor2 = images_tensor2[None].to(self.model.device, dtype=torch.float16)
+            images_tensor2 = images_tensor2[None].to(self.model.device, dtype=torch.float32)
 
             mask_np2 = image_info2["mask_np"]
             mask_pil2 = Image.fromarray(mask_np2 * 255)
             
             masks_tensor2 = process_image(mask_pil2, self.model.config, None)
-            masks_tensor2 = masks_tensor2[None].to(self.model.device, dtype=torch.float16)
+            masks_tensor2 = masks_tensor2[None].to(self.model.device, dtype=torch.float32)
 
             images_tensor2 = torch.cat((images_tensor2, masks_tensor2[:, :1, ...]), dim=1)
         else:
@@ -182,7 +188,9 @@ class DescribeAnythingModel(nn.Module):
         assert len(image_pils) == len(mask_pils), f"image_pils and mask_pils must have the same length. Got {len(image_pils)} and {len(mask_pils)}."
         image_tensors = [self.get_image_tensor(image_pil, mask_pil, crop_mode=crop_mode, crop_mode2=crop_mode2) for image_pil, mask_pil in zip(image_pils, mask_pils)]
         
-        input_ids = tokenizer_image_token(prompt, self.tokenizer, IMAGE_TOKEN_INDEX, return_tensors="pt").unsqueeze(0).cuda()
+        #input_ids = tokenizer_image_token(prompt, self.tokenizer, IMAGE_TOKEN_INDEX, return_tensors="pt").unsqueeze(0).cuda()
+        input_ids = tokenizer_image_token(prompt, self.tokenizer, IMAGE_TOKEN_INDEX, return_tensors="pt").unsqueeze(0).to(self.device)
+
 
         stop_str = conv.sep if conv.sep_style != SeparatorStyle.TWO else conv.sep2
         keywords = [stop_str]

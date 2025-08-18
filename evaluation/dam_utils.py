@@ -55,25 +55,25 @@ def get_description(image_pil, mask_pil):
     mask_np = (np.asarray(mask_pil) / 255).astype(np.uint8)
     full_mask_np = mask_np
     images_tensor, image_info = process_image(image_pil, model.config, None, pil_preprocess_fn=lambda pil_img: crop_image(image_pil, mask_np=mask_np, crop_mode=crop_mode))
-    images_tensor = images_tensor[None].to(model.device, dtype=torch.float16)
+    images_tensor = images_tensor[None].to(model.device, dtype=torch.float32)
 
     mask_np = image_info["mask_np"]
     mask_pil = Image.fromarray(mask_np * 255)
     
     masks_tensor = process_image(mask_pil, model.config, None)
-    masks_tensor = masks_tensor[None].to(model.device, dtype=torch.float16)
+    masks_tensor = masks_tensor[None].to(model.device, dtype=torch.float32)
     
     images_tensor = torch.cat((images_tensor, masks_tensor[:, :1, ...]), dim=1)
 
     if crop_mode2 is not None:
         images_tensor2, image_info2 = process_image(image_pil, model.config, None, pil_preprocess_fn=lambda pil_img: crop_image(pil_img, mask_np=full_mask_np, crop_mode=crop_mode2))
-        images_tensor2 = images_tensor2[None].to(model.device, dtype=torch.float16)
+        images_tensor2 = images_tensor2[None].to(model.device, dtype=torch.float32)
 
         mask_np2 = image_info2["mask_np"]
         mask_pil2 = Image.fromarray(mask_np2 * 255)
         
         masks_tensor2 = process_image(mask_pil2, model.config, None)
-        masks_tensor2 = masks_tensor2[None].to(model.device, dtype=torch.float16)
+        masks_tensor2 = masks_tensor2[None].to(model.device, dtype=torch.float32)
         
         images_tensor2 = torch.cat((images_tensor2, masks_tensor2[:, :1, ...]), dim=1)
     else:

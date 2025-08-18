@@ -177,7 +177,7 @@ if __name__ == '__main__':
         "focal_prompt": "full+focal_crop",
     }
 
-    model = AutoModel.from_pretrained(args.model_path, trust_remote_code=True, torch_dtype='torch.float16').to(device)
+    model = AutoModel.from_pretrained(args.model_path, trust_remote_code=True, torch_dtype='torch.float32').to(device)
     dam = model.init_dam(conv_mode=args.conv_mode, prompt_mode=prompt_modes.get(args.prompt_mode, args.prompt_mode))
 
     # Get description

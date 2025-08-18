@@ -50,9 +50,9 @@ class LlavaMetaModel(ABC):
             # already initialized, skipped
             return 
         
-        model_dtype = getattr(config, "model_dtype", "torch.float16")
+        model_dtype = getattr(config, "model_dtype", "torch.float32")
         if not hasattr(config, "model_dtype"):
-            warnings.warn("model_dtype not found in config, defaulting to torch.float16.")
+            warnings.warn("model_dtype not found in config, defaulting to torch.float32.")
             config.model_dtype = model_dtype
         
         # print("init_vlm(): config", config); input("DEBUG init_vlm")
@@ -93,9 +93,9 @@ class LlavaMetaModel(ABC):
                 raise NotImplementedError(f"wrong type, {type(model_path_or_config)} \
                                         {isinstance(model_path_or_config, LlavaConfig)}")
 
-        model_dtype = getattr(config, "model_dtype", "torch.float16")
+        model_dtype = getattr(config, "model_dtype", "torch.float32")
         if not hasattr(config, "model_dtype"):
-            warnings.warn("model_dtype not found in config, defaulting to torch.float16.")
+            warnings.warn("model_dtype not found in config, defaulting to torch.float32.")
             config.model_dtype = model_dtype
         
         cfgs = get_model_config(config)

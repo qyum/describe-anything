@@ -60,7 +60,7 @@ class LlavaLlamaModel(LlavaMetaModel, LlavaMetaForCausalLM, PreTrainedModel):
         token: Optional[Union[str, bool]] = None,
         revision: str = "main",
         use_safetensors: bool = None,
-        torch_dtype: Optional[Union[str, torch.dtype]] = torch.float16,
+        torch_dtype: Optional[Union[str, torch.dtype]] = torch.float32,
         init_dam: bool = False,
         # conv_mode and prompt_mode are only used by `init_dam` in `from_pretrained` if `init_dam` is set to True
         conv_mode: str = "v1",

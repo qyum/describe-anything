@@ -56,12 +56,12 @@ def load_pretrained_model(
         kwargs["load_in_4bit"] = True
         kwargs["quantization_config"] = BitsAndBytesConfig(
             load_in_4bit=True,
-            bnb_4bit_compute_dtype=torch.float16,
+            bnb_4bit_compute_dtype=torch.float32,
             bnb_4bit_use_double_quant=True,
             bnb_4bit_quant_type="nf4",
         )
     else:
-        kwargs["torch_dtype"] = torch.float16
+        kwargs["torch_dtype"] = torch.float32
 
     config = AutoConfig.from_pretrained(model_path)
     config.resume_path = model_path
@@ -90,12 +90,20 @@ def load_pretrained_model(
 
     model.resize_token_embeddings(len(tokenizer))
     vision_tower = model.get_vision_tower()
-    vision_tower.to(device=device, dtype=torch.float16)
+
+    #vision_tower.to(device=device, dtype=torch.float32)
+    vision_tower.to(device="cpu", dtype=torch.float32)
+
     mm_projector = model.get_mm_projector()
-    mm_projector.to(device=device, dtype=torch.float16)
+
+    #mm_projector.to(device=device, dtype=torch.float32)
+    mm_projector.to(device="cpu", dtype=torch.float32)
+
+
     context_provider = model.get_context_provider()
     if context_provider is not None:
-        context_provider.to(device=device, dtype=torch.float16)
+        #context_provider.to(device=device, dtype=torch.float32)
+        context_provider.to(device="cpu", dtype=torch.float32)
     image_processor = vision_tower.image_processor
 
     if hasattr(model.llm.config, "max_sequence_length"):

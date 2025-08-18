@@ -90,9 +90,18 @@ def build_llm_and_tokenizer(
     if model_max_length is not None:
         context_length_extension(llm_cfg)
 
+    # llm = AutoModelForCausalLM.from_pretrained(
+    #     model_name_or_path, config=llm_cfg, torch_dtype=eval(config.model_dtype), *args, **kwargs
+    # )
+
     llm = AutoModelForCausalLM.from_pretrained(
-        model_name_or_path, config=llm_cfg, torch_dtype=eval(config.model_dtype), *args, **kwargs
-    )
+    model_name_or_path,
+    config=llm_cfg,
+    torch_dtype=torch.float32,
+    device_map="cpu"
+)
+
+
     
     llm_path = model_name_or_path
     if not has_tokenizer(llm_path):
